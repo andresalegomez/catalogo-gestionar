@@ -343,7 +343,7 @@ function borrarCategoria(categoryIndex) {
             categories.splice(categoryIndex, 1);
 
             actualizarCategoriasTablas();
-
+            updateSelectsCategoria();
             Swal.fire(
                 'Eliminado!',
                 'La categoría ha sido eliminada.',
