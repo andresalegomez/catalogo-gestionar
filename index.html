@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container my-5">
+        <h1 class="text-center">Gestión de Catálogos</h1>
+        <!-- Formulario de Categorías y Productos en una sola línea con estilos -->
+        <div class="card my-4">
+            <div class="card-body">
+                <!-- <h3 class="text-center mb-3">Categoría y Producto</h3> -->
+                <div class="row mt-2">
+                    <!-- Formulario de Categoría -->
+                    <div class="col-12 col-md-6 mb-3">
+                        <div class="container p-3 border rounded shadow-sm">
+                            <h4 class="mb-4 text-center">Crear Categoría</h4>
+                            <form id="categoryForm">
+                                <div class="mb-2">
+                                    <label for="categoryImage" class="form-label">Imagen de la Categoría</label>
+                                    <input type="file" class="form-control" id="categoryImage">
+                                </div>
+                                <div class="mb-2">
+                                    <label for="categoryName" class="form-label">Nombre de la Categoría</label>
+                                    <input type="text" class="form-control" id="categoryName" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">Crear Categoría</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Formulario de Producto -->
+                    <div class="col-12 col-md-6 mb-3">
+                        <div class="container p-3 border rounded shadow-sm">
+                            <h4 class="mb-4 text-center">Crear Producto</h4>
+                            <form id="productForm">
+                                <div class="mb-2">
+                                    <label for="productImage" class="form-label">Imagen del Producto</label>
+                                    <input type="file" class="form-control" id="productImage">
+                                </div>
+                                <div class="mb-2">
+                                    <label for="productName" class="form-label">Nombre del Producto</label>
+                                    <input type="text" class="form-control" id="productName" required>
+                                </div>
+                                <div class="mb-2">
+                                    <label for="productUnits" class="form-label">Unidades por Bulto</label>
+                                    <input type="number" class="form-control" id="productUnits" required>
+                                </div>
+                                <div class="mb-2">
+                                    <label for="productPrice" class="form-label">Precio por Unidad</label>
+                                    <input type="number" step="0.01" class="form-control" id="productPrice" required>
+                                </div>
+                                <div class="mb-2">
+                                    <label for="productCategory" class="form-label">Categoría</label>
+                                    <select class="form-select" id="productCategory" required>
+                                        <option value="">Seleccione una categoría</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">Crear Producto</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center align-items-center">
+            <div class="my-4 text-center">
+                <button class="btn btn-success m-2" onclick="guardarCatalogo()">
+                    <i class="bi bi-file-earmark-arrow-down"></i> Descargar Catálogo
+                </button>
+                <label class="btn btn-secondary m-2">
+                    <i class="bi bi-file-earmark-arrow-up"></i> Cargar Catálogo
+                    <input type="file" accept=".json" onchange="cargarCatalogo(event)" hidden>
+                </label>
+                <button class="btn btn-danger m-2" onclick="generarCatalogoPDF()">
+                    <i class="bi bi-file-earmark-pdf"></i> Generar PDF
+                </button>
+            </div>
+        </div>
+
+        <!-- Tablas de Categorías y Productos -->
+        <div id="categoryTables" class="my-4"></div>
+
+        <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="editProductForm">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editProductModalLabel">Editar Producto</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="editProductImage">Imagen del Producto</label>
+                                <input type="file" class="form-control" id="editProductImage">
+                            </div>
+                            <div class="mb-3">
+                                <label for="editProductName" class="form-label">Nombre del Producto</label>
+                                <input type="text" class="form-control" id="editProductName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editProductUnits" class="form-label">Unidades por Bulto</label>
+                                <input type="number" class="form-control" id="editProductUnits" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editProductPrice" class="form-label">Precio por Unidad</label>
+                                <input type="number" step="0.01" class="form-control" id="editProductPrice" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editProductCategory" class="form-label">Categoría</label>
+                                <select class="form-select" id="editProductCategory" required></select>
+                            </div>
+                            <input type="hidden" id="editProductIndex">
+                            <input type="hidden" id="editCategoryIndex">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" onclick="guardarProducto()">Guardar
+                                Cambios</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal para editar categoría -->
+        <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editCategoryModalLabel">Editar Categoría</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editCategoryForm">
+                            <div class="mb-3">
+                                <label for="editCategoryName" class="form-label">Nombre de la Categoría</label>
+                                <input type="text" class="form-control" id="editCategoryName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editCategoryImage" class="form-label">Cambiar Imagen</label>
+                                <input type="file" class="form-control" id="editCategoryImage" accept="image/*">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="saveCategoryChanges">Guardar Cambios</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="script.js"></script>
+
+</body>
+
+</html>
