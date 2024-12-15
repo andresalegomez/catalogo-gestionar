@@ -160,7 +160,9 @@ function actualizarCategoriasTablas() {
             table.appendChild(tbody);
             tableBody.appendChild(table);
         } else {
-            tableBody.textContent = 'No hay productos en esta categoría.';
+            tableBody.innerHTML = '<div class="centered-content" style="display: flex; justify-content: center; align-items: center; text-align: center; flex-direction: column"><i class="bi bi-exclamation-triangle"></i> No hay productos en esta categoría.</div>';
+
+
         }
 
         tableCard.appendChild(tableBody);
@@ -312,24 +314,45 @@ function guardarCatalogo() {
 
 function borrarCategoria(categoryIndex) {
 
-    if (categories[categoryIndex].products.length > 0) {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esta acción no se puede deshacer.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
 
-        Swal.fire({
-            toast: true,
-            position: 'top-right',
-            icon: 'error',
-            title: 'No se puede eliminar la categoría porque tiene productos.',
-            showConfirmButton: false,
-            timer: 4000,
-            timerProgressBar: true
-        });
-        return;
-    }
+            if (categories[categoryIndex].products.length > 0) {
 
-    categories.splice(categoryIndex, 1);
+                Swal.fire({
+                    toast: true,
+                    position: 'top-right',
+                    icon: 'error',
+                    title: 'No se puede eliminar la categoría porque tiene productos.',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true
+                });
+                return;
+            }
 
-    actualizarCategoriasTablas();
+            categories.splice(categoryIndex, 1);
+
+            actualizarCategoriasTablas();
+
+            Swal.fire(
+                'Eliminado!',
+                'La categoría ha sido eliminada.',
+                'success'
+            );
+        }
+    });
 }
+
 
 function cargarCatalogo(event) {
     const file = event.target.files[0];
