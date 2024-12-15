@@ -1,12 +1,25 @@
-body{
+body {
     background-color: rgb(201, 201, 201);
 }
+
 table {
     width: 100%;
 }
 
-th, td, tr {
+th,
+td,
+tr {
     text-align: center;
     vertical-align: middle;
     border: 1px solid black;
+}
+
+.tablass {
+    height: 300px;
+    overflow-y: auto;
+}
+
+.input-obligatorio {
+
+    color: red;
 }

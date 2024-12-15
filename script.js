@@ -122,7 +122,7 @@ function actualizarCategoriasTablas() {
         tableCard.appendChild(tableHeader);
 
         const tableBody = document.createElement('div');
-        tableBody.className = 'card-body';
+        tableBody.className = 'card-body tablass';
 
         if (category.products.length > 0) {
             const table = document.createElement('table');
