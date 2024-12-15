@@ -1,4 +1,4 @@
-const categories = [];
+let categories = JSON.parse(localStorage.getItem('categories')) || [];
 
 document.getElementById('categoryForm').addEventListener('submit', async function (event) {
     event.preventDefault();
@@ -541,5 +541,25 @@ function generarCatalogoPDF() {
     doc.save(nombreArchivo);
 }
 
+function autoguardar() {
+    localStorage.setItem('categories', JSON.stringify(categories));
+
+    // Swal.fire({
+    //     toast: true,
+    //     position: 'top-right',
+    //     icon: 'success',
+    //     title: 'Autoguardado...',
+    //     showConfirmButton: false,
+    //     timer: 3000,
+    //     timerProgressBar: true
+    // });
+}
+
+setInterval(autoguardar, 3000);
+
+document.addEventListener('DOMContentLoaded', () => {
+    updateSelectsCategoria();
+    actualizarCategoriasTablas();
+});
 
 
