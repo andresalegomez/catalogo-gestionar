@@ -22,17 +22,24 @@
                     <!-- Formulario de Categoría -->
                     <div class="col-12 col-md-6 mb-3">
                         <div class="container p-3 border rounded shadow-sm">
+                            <div class="form-toggle">
+                                <div class="form-toggle-switch" id="toggleSwitchCategory"></div>
+                                <label for="toggleSwitchCategory"></label>
+                            </div>
                             <h4 class="mb-4 text-center"><i class="bi bi-list-check"></i> Crear Categoría</h4>
                             <form id="categoryForm">
                                 <div class="mb-2">
-                                    <label for="categoryImage" class="form-label"><i class="bi bi-card-image"></i> Imagen de la Categoría</label>
+                                    <label for="categoryImage" class="form-label"><i class="bi bi-card-image"></i>
+                                        Imagen de la Categoría</label>
                                     <input type="file" class="form-control" id="categoryImage">
                                 </div>
                                 <div class="mb-2">
-                                    <label for="categoryName" class="form-label"><i class="bi bi-pencil"></i> Nombre de la Categoría <span class="input-obligatorio">*</span></label>
+                                    <label for="categoryName" class="form-label"><i class="bi bi-pencil"></i> Nombre de
+                                        la Categoría <span class="input-obligatorio">*</span></label>
                                     <input type="text" class="form-control" id="categoryName" required>
                                 </div>
-                                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-sign-intersection"></i> Crear Categoría</button>
+                                <button type="submit" class="btn btn-primary w-100"><i
+                                        class="bi bi-sign-intersection"></i> Crear Categoría</button>
                             </form>
                         </div>
                     </div>
@@ -40,31 +47,41 @@
                     <!-- Formulario de Producto -->
                     <div class="col-12 col-md-6 mb-3">
                         <div class="container p-3 border rounded shadow-sm">
+                            <div class="form-toggle">
+                                <div class="form-toggle-switch" id="toggleSwitchProduct"></div>
+                                <label for="toggleSwitchProduct"></label>
+                            </div>
                             <h4 class="mb-4 text-center"><i class="bi bi-archive"></i> Crear Producto</h4>
                             <form id="productForm">
                                 <div class="mb-2">
-                                    <label for="productImage" class="form-label"><i class="bi bi-card-image"></i> Imagen del Producto</label>
+                                    <label for="productImage" class="form-label"><i class="bi bi-card-image"></i> Imagen
+                                        del Producto</label>
                                     <input type="file" class="form-control" id="productImage">
                                 </div>
                                 <div class="mb-2">
-                                    <label for="productName" class="form-label"><i class="bi bi-pencil"></i> Nombre del Producto <span class="input-obligatorio">*</span></label>
+                                    <label for="productName" class="form-label"><i class="bi bi-pencil"></i> Nombre del
+                                        Producto <span class="input-obligatorio">*</span></label>
                                     <input type="text" class="form-control" id="productName" required>
                                 </div>
                                 <div class="mb-2">
-                                    <label for="productUnits" class="form-label"><i class="bi bi-123"></i> Unidades por Bulto <span class="input-obligatorio">*</span></label>
+                                    <label for="productUnits" class="form-label"><i class="bi bi-123"></i> Unidades por
+                                        Bulto <span class="input-obligatorio">*</span></label>
                                     <input type="number" class="form-control" id="productUnits" required>
                                 </div>
                                 <div class="mb-2">
-                                    <label for="productPrice" class="form-label"><i class="bi bi-currency-dollar"></i> Precio por Unidad <span class="input-obligatorio">*</span></label>
+                                    <label for="productPrice" class="form-label"><i class="bi bi-currency-dollar"></i>
+                                        Precio por Unidad <span class="input-obligatorio">*</span></label>
                                     <input type="number" step="0.01" class="form-control" id="productPrice" required>
                                 </div>
                                 <div class="mb-2">
-                                    <label for="productCategory" class="form-label"><i class="bi bi-list-check"></i> Categoría <span class="input-obligatorio">*</span></label>
+                                    <label for="productCategory" class="form-label"><i class="bi bi-list-check"></i>
+                                        Categoría <span class="input-obligatorio">*</span></label>
                                     <select class="form-select" id="productCategory" required>
                                         <option value="">Seleccione una categoría</option>
                                     </select>
                                 </div>
-                                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-sign-intersection"></i> Crear Producto</button>
+                                <button type="submit" class="btn btn-primary w-100"><i
+                                        class="bi bi-sign-intersection"></i> Crear Producto</button>
                             </form>
                         </div>
                     </div>

@@ -23,6 +23,8 @@ document.getElementById('categoryForm').addEventListener('submit', async functio
             timer: 4000,
             timerProgressBar: true
         });
+
+        autoguardar();
     }
 });
 
@@ -43,6 +45,7 @@ document.getElementById('productForm').addEventListener('submit', async function
             category.products.push({ name, image: imageUrl, units, price });
             actualizarCategoriasTablas();
             this.reset();
+            autoguardar();
         }
     }
 
@@ -176,6 +179,7 @@ function moverCategoria(categoryIndex, direction) {
         const [category] = categories.splice(categoryIndex, 1);
         categories.splice(newIndex, 0, category);
         actualizarCategoriasTablas();
+        autoguardar();
     }
 }
 
@@ -186,6 +190,7 @@ function moverProducto(categoryIndex, productIndex, direction) {
         const [product] = category.products.splice(productIndex, 1);
         category.products.splice(newIndex, 0, product);
         actualizarCategoriasTablas();
+        autoguardar();
     }
 }
 
@@ -240,6 +245,7 @@ async function guardarProducto() {
     });
 
     actualizarCategoriasTablas();
+    autoguardar();
     bootstrap.Modal.getInstance(document.getElementById('editProductModal')).hide();
 }
 
@@ -270,6 +276,7 @@ function borrarProducto(categoryIndex, productIndex) {
                 timer: 4000,
                 timerProgressBar: true
             });
+            autoguardar();
         }
     });
 }
@@ -308,6 +315,7 @@ function guardarCatalogo() {
                 timer: 4000,
                 timerProgressBar: true
             });
+            autoguardar();
         }
     });
 }
@@ -349,6 +357,7 @@ function borrarCategoria(categoryIndex) {
                 'La categoría ha sido eliminada.',
                 'success'
             );
+            autoguardar();
         }
     });
 }
@@ -363,8 +372,10 @@ function cargarCatalogo(event) {
             categories.splice(0, categories.length, ...data);
             updateSelectsCategoria();
             actualizarCategoriasTablas();
+            autoguardar();
         };
         reader.readAsText(file);
+
     }
 }
 
@@ -419,6 +430,7 @@ document.getElementById('editProductForm').addEventListener('submit', function (
     }
 
     actualizarCategoriasTablas();
+    autoguardar();
     bootstrap.Modal.getInstance(document.getElementById('editProductModal')).hide();
 });
 
@@ -506,7 +518,7 @@ function generarCatalogoPDF() {
             const quantityX = xOffset + (cardWidth - doc.getTextWidth(quantityText)) / 2;
             doc.text(quantityText, quantityX, lineYOffset + (lines.length * 3) + 4);
 
-            const priceText = `Precio: $${product.price}`;
+            const priceText = `Precio por unidad: $${product.price}`;
             const priceX = xOffset + (cardWidth - doc.getTextWidth(priceText)) / 2;
             doc.text(priceText, priceX, lineYOffset + (lines.length * 3) + 8);
 
@@ -541,25 +553,100 @@ function generarCatalogoPDF() {
     doc.save(nombreArchivo);
 }
 
-function autoguardar() {
-    localStorage.setItem('categories', JSON.stringify(categories));
+// Función para mostrar el mensaje inicial si no hay catálogo
+function verificarCatalogo() {
+    const catalogo = JSON.parse(localStorage.getItem('categories') || '[]');
 
-    // Swal.fire({
-    //     toast: true,
-    //     position: 'top-right',
-    //     icon: 'success',
-    //     title: 'Autoguardado...',
-    //     showConfirmButton: false,
-    //     timer: 3000,
-    //     timerProgressBar: true
-    // });
+    if (catalogo.length === 0) {
+        Swal.fire({
+            toast: true,
+            position: 'top-right',
+            icon: 'info',
+            title: 'No se detectó un catálogo guardado anteriormente...',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true
+        });
+    } else {
+        const ultimaActualizacion = localStorage.getItem('ultimaActualizacion');
+
+        Swal.fire({
+            title: 'Se detectó un catálogo guardado',
+            text: `Guardado por última vez el ${ultimaActualizacion}. ¿Deseas cargarlo?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Sí',
+            cancelButtonText: 'No'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                updateSelectsCategoria();
+                actualizarCategoriasTablas();
+            } else {
+                Swal.fire({
+                    title: 'Se empezará un catálogo de 0',
+                    text: '¿Deseas continuar?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, continuar',
+                    cancelButtonText: 'No, regresar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        localStorage.clear();
+                        categories = [];
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-right',
+                            icon: 'info',
+                            title: 'Catálogo nuevo iniciado. Los datos anteriores fueron eliminados.',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+                    } else {
+                        updateSelectsCategoria();
+                        actualizarCategoriasTablas();
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-right',
+                            icon: 'info',
+                            title: 'Acción cancelada, catálogo restaurado',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+
 }
 
-setInterval(autoguardar, 3000);
+function autoguardar() {
+    localStorage.setItem('categories', JSON.stringify(categories));
+    const ahora = new Date().toLocaleString();
+    localStorage.setItem('ultimaActualizacion', ahora);
+}
 
 document.addEventListener('DOMContentLoaded', () => {
-    updateSelectsCategoria();
-    actualizarCategoriasTablas();
+    verificarCatalogo();
 });
 
+function setupToggleSwitch(switchElement, targetElement) {
+    switchElement.addEventListener('click', () => {
+        switchElement.classList.toggle('active');
+        targetElement.style.display = switchElement.classList.contains('active') ? 'block' : 'none';
+    });
+}
+
+const toggleSwitchCategory = document.getElementById('toggleSwitchCategory');
+const categoryForm = document.getElementById('categoryForm');
+categoryForm.style.display = 'none';
+setupToggleSwitch(toggleSwitchCategory, categoryForm);
+
+const toggleSwitchProduct = document.getElementById('toggleSwitchProduct');
+const productForm = document.getElementById('productForm');
+productForm.style.display = 'none';
+setupToggleSwitch(toggleSwitchProduct, productForm);
 
